@@ -1,0 +1,284 @@
+// ============================================================
+// USA Financial Data — Power BI DAX Measures Library
+// ============================================================
+//
+// All measures used in the dashboard, organized by purpose.
+// Copy-paste each measure into Power BI Desktop:
+//   1. Modeling ribbon → New measure
+//   2. Replace the auto-generated name with the measure
+//   3. Press Enter to commit
+//
+// Tables referenced:
+//   combined_df    — main fact table (12,000 rows, 27 columns)
+//   LoanTypeTable  — loan type dimension (one row per loan type)
+//   DateTable      — date dimension (calendar table)
+
+
+// ============================================================
+// PAGE 1 — KPI MEASURES
+// ============================================================
+
+Avg Annual Income =
+AVERAGE ( combined_df[Annual_Income] )
+
+
+Avg Monthly Balance =
+AVERAGE ( combined_df[Monthly_Balance] )
+
+
+Avg Delay Days =
+AVERAGE ( combined_df[Delay_from_due_date] )
+
+
+Avg Credit Utilization =
+AVERAGE ( combined_df[Credit_Utilization_Ratio] ) / 100
+
+
+// Display version of Avg Delay that includes the unit "days"
+// Useful inside cards where you want "14.3 days" instead of "14.3"
+Avg Delay Display =
+FORMAT ( AVERAGE ( combined_df[Delay_from_due_date] ), "0.0" ) & " days"
+
+
+// ============================================================
+// PAGE 1 — CREDIT LIMIT TREND
+// ============================================================
+
+// 3-period rolling average of credit limit changes by age.
+// Use this as the Y-axis on the line chart for a smooth trend.
+Avg Credit Limit Change Smoothed =
+VAR CurrentAge = SELECTEDVALUE ( combined_df[Age] )
+RETURN
+    CALCULATE (
+        AVERAGE ( combined_df[Changed_Credit_Limit] ),
+        combined_df[Age] >= CurrentAge - 1
+            && combined_df[Age] <= CurrentAge + 1
+    )
+
+
+// ============================================================
+// PAGE 2 — CREDIT INQUIRIES
+// ============================================================
+
+// Average credit inquiries per row, with data quality wrapper
+// to skip rows where the column contains text like "Data Missing".
+Avg Credit Inquiries by Age =
+CALCULATE (
+    AVERAGEX (
+        FILTER (
+            combined_df,
+            NOT ( ISERROR ( VALUE ( combined_df[Num of Credit Inqueries] ) ) )
+        ),
+        VALUE ( combined_df[Num of Credit Inqueries] )
+    )
+)
+
+
+// Count of distinct ages whose average credit inquiries exceed 7.5
+// (the threshold for "potential customer" identification).
+Qualifying Ages Count =
+VAR AgesAboveThreshold =
+    FILTER (
+        SUMMARIZE (
+            combined_df,
+            combined_df[Age],
+            "AvgInq", [Avg Credit Inquiries by Age]
+        ),
+        [AvgInq] > 7.5
+    )
+RETURN
+    COUNTROWS ( AgesAboveThreshold )
+
+
+// Total distinct ages in the dataset (denominator for "X out of Y" displays)
+Total Ages Analyzed =
+DISTINCTCOUNT ( combined_df[Age] )
+
+
+// Highest single-age inquiry rate — used as a headline stat
+Highest Inquiry Rate =
+MAXX (
+    SUMMARIZE (
+        combined_df,
+        combined_df[Age],
+        "AvgInq", [Avg Credit Inquiries by Age]
+    ),
+    [AvgInq]
+)
+
+
+// The age at which the highest inquiry rate occurs.
+// Returns formatted text "at age 14" — designed for use in a card.
+Age At Highest Inquiry =
+VAR TopAge =
+    TOPN (
+        1,
+        SUMMARIZE (
+            combined_df,
+            combined_df[Age],
+            "AvgInq", [Avg Credit Inquiries by Age]
+        ),
+        [AvgInq], DESC
+    )
+RETURN
+    "at age " & CONCATENATEX ( TopAge, combined_df[Age] )
+
+
+// ============================================================
+// PAGE 3 — LTV TIER BREAKDOWN
+// ============================================================
+
+// Numeric LTV calculation per current filter context.
+// Combines income, delay, credit score, investment, and balance.
+// Credit score is derived from Credit_Mix using a SWITCH ranking.
+LTV Numeric =
+VAR AvgAnnualIncome = CALCULATE ( AVERAGE ( combined_df[Annual_Income] ) )
+VAR AvgDelayfromDueDate = CALCULATE ( AVERAGE ( combined_df[Delay_from_due_date] ) )
+VAR AvgAmountInvested =
+    CALCULATE (
+        AVERAGEX (
+            FILTER (
+                combined_df,
+                NOT ( ISERROR ( VALUE ( combined_df[Amount_invested_monthly] ) ) )
+            ),
+            VALUE ( combined_df[Amount_invested_monthly] )
+        )
+    )
+VAR AvgMonthlyBalance = CALCULATE ( AVERAGE ( combined_df[Monthly_Balance] ) )
+VAR AvgCreditScore =
+    CALCULATE (
+        AVERAGEX (
+            VALUES ( combined_df[Credit_Mix] ),
+            SWITCH (
+                TRUE (),
+                combined_df[Credit_Mix] = "Good", 3,
+                combined_df[Credit_Mix] = "Above Standard", 2,
+                combined_df[Credit_Mix] = "Standard", 1,
+                combined_df[Credit_Mix] = "Bad", 0,
+                0
+            )
+        )
+    )
+RETURN
+    ( 0.3 * AvgAnnualIncome )
+        - ( 0.15 * AvgDelayfromDueDate )
+        + ( 0.4 * AvgCreditScore )
+        + ( 0.075 * AvgAmountInvested )
+        + ( 0.075 * AvgMonthlyBalance )
+
+
+// Premium tier: LTV > $80,000
+// Returns count of distinct ages whose LTV falls in this bracket.
+Premium Tier Count =
+VAR LTVByAge =
+    SUMMARIZE ( combined_df, combined_df[Age], "LTV", [LTV Numeric] )
+VAR Qualifying = FILTER ( LTVByAge, [LTV] > 80000 )
+RETURN
+    COUNTROWS ( Qualifying )
+
+
+// Mid tier: $60,000 ≤ LTV ≤ $80,000
+Mid Tier Count =
+VAR LTVByAge =
+    SUMMARIZE ( combined_df, combined_df[Age], "LTV", [LTV Numeric] )
+VAR Qualifying =
+    FILTER ( LTVByAge, [LTV] >= 60000 && [LTV] <= 80000 )
+RETURN
+    COUNTROWS ( Qualifying )
+
+
+// Entry tier: $50,000 ≤ LTV < $60,000
+Entry Tier Count =
+VAR LTVByAge =
+    SUMMARIZE ( combined_df, combined_df[Age], "LTV", [LTV Numeric] )
+VAR Qualifying =
+    FILTER ( LTVByAge, [LTV] >= 50000 && [LTV] < 60000 )
+RETURN
+    COUNTROWS ( Qualifying )
+
+
+// LTV-tier-aware promotion text. Returns the appropriate offer string
+// based on the current LTV. Useful in tables/cards where you want
+// the offer text shown next to a customer or age group.
+LTV Score =
+VAR CurrentLTV = [LTV Numeric]
+RETURN
+    SWITCH (
+        TRUE (),
+        CurrentLTV > 80000, "30% off on online purchases + home loan at 4% interest",
+        CurrentLTV >= 60000 && CurrentLTV <= 80000, "15% off on online purchases + 10000 worth gift hampers",
+        CurrentLTV >= 50000 && CurrentLTV < 60000, "Any Loan at 5% interest rate",
+        BLANK ()
+    )
+
+
+// ============================================================
+// PAGE 3 — LOANS AND CREDIT CARDS BY AGE
+// ============================================================
+
+// 3-period rolling average for the loans-by-age line chart.
+Avg Loans Smoothed =
+VAR CurrentAge = SELECTEDVALUE ( combined_df[Age] )
+RETURN
+    CALCULATE (
+        AVERAGE ( combined_df[Num_of_Loan] ),
+        combined_df[Age] >= CurrentAge - 1
+            && combined_df[Age] <= CurrentAge + 1
+    )
+
+
+// 3-period rolling average for the credit-cards-by-age line chart.
+Avg Credit Cards Smoothed =
+VAR CurrentAge = SELECTEDVALUE ( combined_df[Age] )
+RETURN
+    CALCULATE (
+        AVERAGE ( combined_df[Num_Credit_Card] ),
+        combined_df[Age] >= CurrentAge - 1
+            && combined_df[Age] <= CurrentAge + 1
+    )
+
+
+// ============================================================
+// HELPER COLUMNS (CALCULATED COLUMNS, NOT MEASURES)
+// ============================================================
+//
+// These go in Modeling → New column, NOT New measure.
+// They power the sort-by-column functionality that gives axes
+// meaningful order instead of alphabetical order.
+//
+// Note: if you get a circular dependency error on these, recreate
+// them as Power Query columns instead. See README "Challenges solved"
+// for the explanation.
+
+
+// Add this as a calculated column in combined_df
+Credit Mix Order =
+SWITCH (
+    TRUE (),
+    combined_df[Credit_Mix] = "Good", 1,
+    combined_df[Credit_Mix] = "Above Standard", 2,
+    combined_df[Credit_Mix] = "Standard", 3,
+    combined_df[Credit_Mix] = "Bad", 4,
+    99
+)
+
+
+// Add this as a calculated column in combined_df
+Age Group Order =
+SWITCH (
+    combined_df[Age Groups],
+    "Teen", 1,
+    "Young Adult", 2,
+    "Adult", 3,
+    "Old Adult", 3,
+    "Middle-Aged", 4,
+    "Old1", 4,
+    "Senior", 5,
+    "Old2", 5,
+    99
+)
+
+
+// ============================================================
+// END OF MEASURES LIBRARY
+// ============================================================

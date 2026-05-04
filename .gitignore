@@ -1,0 +1,45 @@
+# Sensitive credentials — NEVER commit these
+*.json
+service_account_*.json
+drive-bridge-*.json
+credentials.json
+*.key
+
+# Power BI files (too large, may contain data)
+*.pbix
+*.pbit
+*.pbids
+
+# Data files
+data/*.csv
+data/*.xlsx
+data/*.xls
+data/raw/
+data/processed/
+data/incoming/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
