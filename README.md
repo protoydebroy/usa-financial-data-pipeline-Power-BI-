@@ -1,6 +1,6 @@
 # USA Financial Data Pipeline & Dashboard
 
-End-to-end automated data pipeline that ingests daily financial reports from 25 field agents via email, processes them through cloud services, and surfaces insights through a 4-page interactive Power BI dashboard. Eliminated ~$144K/year in manual processing costs and reduced report turnaround from 5 hours to 30 minutes.
+End-to-end automated data pipeline that ingests daily financial reports from 25 field agents via email, processes them through cloud services, and surfaces insights through a 5-page interactive Power BI dashboard. Eliminated ~$144K/year in manual processing costs and reduced report turnaround from 5 hours to 30 minutes.
 
 ![Dashboard preview](docs/dashboard-page1-profile.png)
 
@@ -31,26 +31,45 @@ A four-stage pipeline that runs unattended:
 
 ## Dashboard
 
-Four pages, each answering a distinct business question:
+Five pages, each answering a distinct business question:
 
 | Page | Question answered |
 |---|---|
 | Profile | Who are our customers and how do they manage credit? |
-| Customers | Which segments are potential customers for new products? |
+| Customers | What payment behaviors and credit inquiries identify potential customers? |
 | Portfolio | Which products are most popular and how do holdings change with age? |
-| Insights | What are the key takeaways and recommended actions? |
+| Insights | What are the five key takeaways from the analysis? |
+| Recommendations | What concrete actions should the business take? |
 
-### Page 1 — Customer profile and credit behavior
+### Page 1 — Profile (customer profile and credit behavior)
+
+KPI cards on the left, credit-limit-by-age trend top-center, age distribution histogram bottom-center, credit-mix-by-age cluster chart on the right. Imputation bias on age 34 is flagged inline.
+
 ![Profile](docs/dashboard-page1-profile.png)
 
-### Page 2 — Customer value
+### Page 2 — Customers (payment behavior and potential customer identification)
+
+Payment behavior by credit mix on top, credit inquiries threshold chart bottom-left, potential customer summary cards and top qualifying ages bottom-right.
+
 ![Customers](docs/dashboard-page2-customers.png)
 
-### Page 3 — Promotions and loan portfolio
+### Page 3 — Portfolio (LTV tiers and loan distribution)
+
+LTV tier breakdown cards (Premium/Mid/Entry), loan portfolio horizontal bar chart with most-popular highlighted, smoothed loans-and-credit-cards-by-age line chart at the bottom.
+
 ![Portfolio](docs/dashboard-page3-portfolio.png)
 
-### Page 4 — Insights and recommendations
+### Page 4 — Insights (five takeaways for management)
+
+Numbered insight cards, each tied to a specific number from the dashboard. Color-coded supporting stats: amber for observations, teal for opportunities, navy for structural facts.
+
 ![Insights](docs/dashboard-page4-insights.png)
+
+### Page 5 — Recommendations (concrete actions and projected impact)
+
+Three numbered actions with explanations, plus an "Estimated impact" footer quantifying expected outcomes. Pipeline architecture noted at the bottom.
+
+![Recommendations](docs/dashboard-page5-recommendations.png)
 
 ## Key DAX work
 
@@ -74,10 +93,10 @@ Full DAX library: [`powerbi/measures.dax`](powerbi/measures.dax)
 1. Customers aged 14–25 are the credit acquisition segment, averaging 10.2+ credit inquiries
 2. Credit limit growth declines 52% from younger to older customers
 3. Standard credit mix segment (1,127 customers) shows no clear behavioral pattern
-4. 412 customers qualify for the premium LTV promotion tier (LTV > $80K)
+4. 7 customers qualify for the premium LTV promotion tier (LTV > $80K)
 5. Loan portfolio is well-diversified across 9 product types
 
-Page 4 of the dashboard contains the full written analysis.
+Full analysis with supporting numbers is on the Insights page; resulting actions are on the Recommendations page.
 
 ## Repository structure
 
@@ -101,9 +120,10 @@ If you want to set up a similar pipeline:
 
 ## Challenges solved during the build
 
-- **Imputation bias detection:** Identified that age 34 was over-represented by 90% vs surrounding ages (696 records vs ~370 average), indicating median-fill of missing values upstream. Filtered affected records from demographic visualizations.
+- **Imputation bias detection:** Identified that age 34 was over-represented by 90% vs surrounding ages (696 records vs ~370 average), indicating median-fill of missing values upstream. Filtered affected records from demographic visualizations and surfaced the issue inline on Page 1.
 - **Circular dependency in DAX sort-by-column:** Resolved by moving order columns from calculated columns to Power Query custom columns.
 - **Non-numeric values in numeric columns:** Wrapped affected DAX measures in error-tolerant patterns; later cleaned at the Power Query layer for performance.
+- **Static annotations vs dynamic filtering:** Identified that hardcoded peak/trough labels would mislead users when filters were applied. Used `Edit interactions` to designate the credit-limit chart as a context visual that ignores slicers, maintaining annotation accuracy.
 
 ## License
 
