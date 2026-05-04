@@ -133,4 +133,7 @@ MIT — see [LICENSE](LICENSE)
 
 Built by **Protoy Debroy**
 
-If you want to discuss this project or related work, reach out via [LinkedIn](#) or email.
+- LinkedIn: [linkedin.com/in/protoy-debroy-593561256](https://www.linkedin.com/in/protoy-debroy-593561256/)
+- Email: [protoy.debroy@gmail.com](mailto:protoy.debroy@gmail.com)
+
+Open to discussing this project, related data engineering / BI work, or new opportunities.
