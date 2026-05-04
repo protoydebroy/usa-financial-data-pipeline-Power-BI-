@@ -12,7 +12,7 @@ A financial analytics firm received ~25 attachments daily from field agents acro
 
 A four-stage pipeline that runs unattended:
 
-![Architecture](docs/architecture.png)
+![Architecture](docs/architecture.svg)
 
 1. **Outlook** receives mails. A rule routes attachments matching the keyword to a dedicated folder.
 2. **Power Automate** monitors the folder, extracts attachments, and writes each one to Google Drive.

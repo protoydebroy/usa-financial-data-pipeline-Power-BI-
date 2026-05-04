@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1320" role="img" aria-labelledby="title desc" font-family="Segoe UI, system-ui, -apple-system, sans-serif">
+<title id="title">USA Financial Data Pipeline Architecture</title>
+<desc id="desc">End-to-end automation flow from Microsoft Outlook through Power Automate, Google Drive, Google Cloud, and a Python script into Power BI dashboard.</desc>
+
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M2 1 L8 5 L2 9" fill="none" stroke="#475569" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+<feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+<feOffset dx="0" dy="2" result="offsetblur"/>
+<feComponentTransfer><feFuncA type="linear" slope="0.12"/></feComponentTransfer>
+<feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+
+<rect x="0" y="0" width="720" height="1320" fill="#F7F7F5"/>
+
+<text x="40" y="44" font-size="22" font-weight="700" fill="#1A1A1A">USA Financial Data Pipeline</text>
+<text x="40" y="64" font-size="12" fill="#6B6B6B">End-to-end automation: Outlook → Power Automate → Google Drive → Power BI</text>
+<line x1="40" y1="80" x2="680" y2="80" stroke="#E5E5E5" stroke-width="1"/>
+
+<g>
+<rect x="40" y="104" width="640" height="208" rx="6" fill="#FFFFFF" stroke="#DBE5F0" stroke-width="1"/>
+<rect x="40" y="104" width="4" height="208" fill="#1F4E79"/>
+<text x="56" y="128" font-size="11" font-weight="700" fill="#1F4E79" letter-spacing="1">STAGE 1 — RECEIVE &amp; SEGREGATE</text>
+<text x="56" y="146" font-size="11" fill="#6B6B6B">Microsoft Outlook · Rule-based mail routing</text>
+
+<g filter="url(#shadow)">
+<rect x="240" y="164" width="240" height="48" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1"/>
+<text x="360" y="184" font-size="13" font-weight="600" fill="#1A1A1A" text-anchor="middle">Field agents</text>
+<text x="360" y="202" font-size="11" fill="#6B6B6B" text-anchor="middle">~25 senders, daily mails with attachments</text>
+</g>
+
+<line x1="360" y1="212" x2="360" y2="244" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g filter="url(#shadow)">
+<rect x="240" y="248" width="240" height="48" rx="6" fill="#FFFFFF" stroke="#1F4E79" stroke-width="1.4"/>
+<text x="360" y="268" font-size="13" font-weight="600" fill="#1F4E79" text-anchor="middle">Outlook · FinanceVault folder</text>
+<text x="360" y="285" font-size="11" fill="#6B6B6B" text-anchor="middle">Rule auto-routes by keyword "Credit Score"</text>
+</g>
+</g>
+
+<g>
+<line x1="360" y1="324" x2="360" y2="356" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+</g>
+
+<g>
+<rect x="40" y="364" width="640" height="208" rx="6" fill="#FFFFFF" stroke="#E1D6EE" stroke-width="1"/>
+<rect x="40" y="364" width="4" height="208" fill="#7E22CE"/>
+<text x="56" y="388" font-size="11" font-weight="700" fill="#7E22CE" letter-spacing="1">STAGE 2 — TRANSFER</text>
+<text x="56" y="406" font-size="11" fill="#6B6B6B">Microsoft Power Automate · Cloud workflow</text>
+
+<g filter="url(#shadow)">
+<rect x="100" y="424" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#7E22CE" stroke-width="1.2"/>
+<text x="220" y="442" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">Trigger: New email (V2)</text>
+<text x="220" y="458" font-size="10" fill="#6B6B6B" text-anchor="middle">Watches FinanceVault folder</text>
+</g>
+
+<g filter="url(#shadow)">
+<rect x="380" y="424" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#7E22CE" stroke-width="1.2"/>
+<text x="500" y="442" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">For each attachment</text>
+<text x="500" y="458" font-size="10" fill="#6B6B6B" text-anchor="middle">Loops through every file in mail</text>
+</g>
+
+<line x1="340" y1="447" x2="376" y2="447" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g filter="url(#shadow)">
+<rect x="240" y="500" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#7E22CE" stroke-width="1.2"/>
+<text x="360" y="518" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">Action: Create file</text>
+<text x="360" y="534" font-size="10" fill="#6B6B6B" text-anchor="middle">Name and content mapped to Drive</text>
+</g>
+
+<line x1="500" y1="472" x2="430" y2="498" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+</g>
+
+<g>
+<line x1="360" y1="584" x2="360" y2="616" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+</g>
+
+<g>
+<rect x="40" y="624" width="640" height="208" rx="6" fill="#FFFFFF" stroke="#CFE9E5" stroke-width="1"/>
+<rect x="40" y="624" width="4" height="208" fill="#0F766E"/>
+<text x="56" y="648" font-size="11" font-weight="700" fill="#0F766E" letter-spacing="1">STAGE 3 — STORE &amp; AUTHORIZE</text>
+<text x="56" y="666" font-size="11" fill="#6B6B6B">Google Drive · Google Cloud service account</text>
+
+<g filter="url(#shadow)">
+<rect x="100" y="684" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.2"/>
+<text x="220" y="702" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">Drive: Financial Project folder</text>
+<text x="220" y="718" font-size="10" fill="#6B6B6B" text-anchor="middle">Holds CSV / Excel attachments</text>
+</g>
+
+<g filter="url(#shadow)">
+<rect x="380" y="684" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.2"/>
+<text x="500" y="702" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">Service account + JSON key</text>
+<text x="500" y="718" font-size="10" fill="#6B6B6B" text-anchor="middle">Drive API · read-only scope</text>
+</g>
+
+<line x1="340" y1="707" x2="376" y2="707" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g filter="url(#shadow)">
+<rect x="240" y="760" width="240" height="46" rx="6" fill="#FFFAEC" stroke="#D97706" stroke-width="1.2"/>
+<text x="360" y="778" font-size="12" font-weight="600" fill="#854F0B" text-anchor="middle">Folder shared with service email</text>
+<text x="360" y="794" font-size="10" fill="#854F0B" text-anchor="middle">Required for programmatic access</text>
+</g>
+
+<line x1="500" y1="732" x2="430" y2="758" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+</g>
+
+<g>
+<line x1="360" y1="844" x2="360" y2="876" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+</g>
+
+<g>
+<rect x="40" y="884" width="640" height="232" rx="6" fill="#FFFFFF" stroke="#F4D9B6" stroke-width="1"/>
+<rect x="40" y="884" width="4" height="232" fill="#D97706"/>
+<text x="56" y="908" font-size="11" font-weight="700" fill="#D97706" letter-spacing="1">STAGE 4 — INGEST</text>
+<text x="56" y="926" font-size="11" fill="#6B6B6B">Python script · Power BI Python connector</text>
+
+<g filter="url(#shadow)">
+<rect x="240" y="944" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#D97706" stroke-width="1.2"/>
+<text x="360" y="962" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">List + download files</text>
+<text x="360" y="978" font-size="10" fill="#6B6B6B" text-anchor="middle">Drive API v3 + requests + pandas</text>
+</g>
+
+<line x1="360" y1="990" x2="360" y2="1022" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g filter="url(#shadow)">
+<rect x="240" y="1026" width="240" height="46" rx="6" fill="#FFFFFF" stroke="#D97706" stroke-width="1.2"/>
+<text x="360" y="1044" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle">Combine into combined_df</text>
+<text x="360" y="1060" font-size="10" fill="#6B6B6B" text-anchor="middle">pd.concat across all files</text>
+</g>
+</g>
+
+<g>
+<line x1="360" y1="1128" x2="360" y2="1160" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+</g>
+
+<g>
+<rect x="40" y="1168" width="640" height="120" rx="6" fill="#E6EFF7" stroke="#1F4E79" stroke-width="1.4"/>
+<rect x="40" y="1168" width="4" height="120" fill="#1F4E79"/>
+<text x="56" y="1192" font-size="11" font-weight="700" fill="#1F4E79" letter-spacing="1">STAGE 5 — VISUALIZE</text>
+<text x="56" y="1210" font-size="11" fill="#6B6B6B">Power BI Desktop · 5-page interactive dashboard</text>
+
+<g filter="url(#shadow)">
+<rect x="80" y="1228" width="116" height="44" rx="4" fill="#FFFFFF" stroke="#1F4E79" stroke-width="0.6"/>
+<text x="138" y="1248" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">Profile</text>
+<text x="138" y="1262" font-size="9" fill="#6B6B6B" text-anchor="middle">KPIs · trends</text>
+</g>
+
+<g filter="url(#shadow)">
+<rect x="204" y="1228" width="116" height="44" rx="4" fill="#FFFFFF" stroke="#1F4E79" stroke-width="0.6"/>
+<text x="262" y="1248" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">Customers</text>
+<text x="262" y="1262" font-size="9" fill="#6B6B6B" text-anchor="middle">Behavior · inquiries</text>
+</g>
+
+<g filter="url(#shadow)">
+<rect x="328" y="1228" width="116" height="44" rx="4" fill="#FFFFFF" stroke="#1F4E79" stroke-width="0.6"/>
+<text x="386" y="1248" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">Portfolio</text>
+<text x="386" y="1262" font-size="9" fill="#6B6B6B" text-anchor="middle">LTV · loans</text>
+</g>
+
+<g filter="url(#shadow)">
+<rect x="452" y="1228" width="116" height="44" rx="4" fill="#FFFFFF" stroke="#D97706" stroke-width="0.6"/>
+<text x="510" y="1248" font-size="11" font-weight="600" fill="#1A1A1A" text-anchor="middle">Insights</text>
+<text x="510" y="1262" font-size="9" fill="#6B6B6B" text-anchor="middle">5 takeaways</text>
+</g>
+
+<g filter="url(#shadow)">
+<rect x="576" y="1228" width="64" height="44" rx="4" fill="#FFFFFF" stroke="#D97706" stroke-width="0.6"/>
+<text x="608" y="1248" font-size="10" font-weight="600" fill="#1A1A1A" text-anchor="middle">Recs</text>
+<text x="608" y="1262" font-size="9" fill="#6B6B6B" text-anchor="middle">3 actions</text>
+</g>
+</g>
+
+</svg>

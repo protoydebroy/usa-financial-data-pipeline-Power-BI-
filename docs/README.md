@@ -6,7 +6,8 @@ This folder holds the architecture diagram and dashboard screenshots that the RE
 
 To make the README render correctly on GitHub, this folder needs:
 
-- `architecture.png` — the pipeline flowchart (Outlook → Power Automate → Google Drive → Power BI)
+- `architecture.svg` — the pipeline flowchart (Outlook → Power Automate → Google Drive → Power BI). Vector format renders crisp at any zoom level
+- `architecture.png` — high-res PNG fallback of the same diagram
 - `dashboard-page1-profile.png` — Profile page screenshot
 - `dashboard-page2-customers.png` — Customers page screenshot
 - `dashboard-page3-portfolio.png` — Portfolio page screenshot
@@ -22,12 +23,6 @@ To make the README render correctly on GitHub, this folder needs:
 5. Drag a rectangle around the dashboard area (exclude the Power BI ribbon and tab strip).
 6. Save as PNG (not JPEG — PNG is lossless and looks better on GitHub).
 
-## How to capture the architecture diagram
+## Architecture diagram source
 
-The flowchart was originally generated as an interactive SVG. To save it as a PNG:
-
-1. Right-click the diagram in your chat.
-2. Save image as → `architecture.png`.
-3. Drop it in this folder.
-
-Alternatively, recreate it using draw.io, Lucidchart, or Excalidraw with the same five stages.
+The architecture diagram is included in this repo as both SVG (`architecture.svg`, vector) and PNG (`architecture.png`, 1440×2640 raster). The SVG is the source of truth — open it in any browser, Figma, or Inkscape to edit. The PNG is a rendered export for environments that don't display SVG.
